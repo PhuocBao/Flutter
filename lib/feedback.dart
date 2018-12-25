@@ -39,51 +39,91 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Stack(
-        children: <Widget>[
-          Align(
-            alignment: Alignment.topCenter,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                Container(
-                  margin: const EdgeInsets.symmetric(vertical: 50.0),
-                  child: Image.asset('images/logo.png'),
-                ),
-                home.textTheme('How was your experience?', Colors.grey, 30.0),
-              ],
-            ),
+        body: ListView(
+      children: <Widget>[
+        Align(
+          alignment: Alignment.topCenter,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              Container(
+                margin: const EdgeInsets.symmetric(vertical: 50.0),
+                child: Image.asset('images/logo.png'),
+              ),
+              home.textTheme('How was your experience?', Colors.grey, 30.0),
+            ],
           ),
-          Center(
-            child: _rateIconSection(),
-          ),
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                Container(
+        ),
+        Center(
+          child: _rateIconSection(),
+        ),
+        Container(
+          margin: EdgeInsets.only(top: 120.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              Container(
+                  color: Color(0xFFF2F2F2),
+                  height: 60.0,
                   margin: const EdgeInsets.symmetric(horizontal: 50.0),
-                  child: TextField(
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(8.0)),borderSide: BorderSide(color: Colors.grey)),
-                    hintText: 'What could we do better?',                   
-                  ),
+                  child: Row(
+                    children: <Widget>[
+                      Expanded(
+                          child: Theme(
+                              data: ThemeData(primaryColor: Color(0xFFF2F2F2)),
+                              child: Padding(
+                                padding: const EdgeInsets.all(10.0),
+                                child: TextField(
+                                  decoration: InputDecoration(
+                                      border: InputBorder.none,
+                                      hintText: 'What could we do better?',
+                                      hintStyle: TextStyle(color: Colors.grey),
+                                      suffix: Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: <Widget>[
+                                          InkWell(
+                                            child: Text('Cancel'),
+                                            onTap: () {},
+                                          ),
+                                        ],
+                                      )),
+                                  keyboardType: TextInputType.text,
+                                ),
+                              ))),
+                      Container(
+                          height: 60.0,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.only(
+                                topRight: Radius.circular(5.0),
+                                bottomRight: Radius.circular(5.0)),
+                            color: Colors.grey,
+                          ),
+                          child: Center(
+                            child: Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 20.0),
+                              child: InkWell(
+                                child: Text('OK'),
+                              ),
+                            ),
+                          ))
+                    ],
+                  )),
+              Container(
+                margin: const EdgeInsets.only(top: 30.0, bottom: 20.0),
+                child: RaisedButton(
+                  color: Colors.grey,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(5.0))),
+                  child:
+                      home.textTheme('Rate your feedback', Colors.white, 15.0),
+                  onPressed: () {},
                 ),
-                ),
-                Container(
-                  margin: const EdgeInsets.symmetric(vertical: 20.0),
-                  child: RaisedButton(
-                    color: Colors.grey,
-                    child: Text('Rate your feedback'),
-                    onPressed: () {},
-                  ),
-                )
-              ],
-            )
-          )
-        ],
-      ),
-    );
+              )
+            ],
+          ),
+        )
+      ],
+    ));
   }
 }
