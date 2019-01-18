@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_demo_wireframe_design/see_person.dart';
+import 'package:flutter_demo_wireframe_design/check_in.dart';
+import 'package:flutter_demo_wireframe_design/splash_screen.dart';
+import 'package:flutter_demo_wireframe_design/user_provider.dart';
 
 void main() => runApp(MyApp());
 
@@ -9,17 +11,14 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     SystemChrome.setPreferredOrientations(
         [DeviceOrientation.landscapeLeft, DeviceOrientation.landscapeRight]);
-    return MaterialApp(
-      home: HomeScreen(),
+    return UserProvider(
+          child: MaterialApp(
+        theme: ThemeData(primaryColor: Color(0xFF828282)),
+        debugShowCheckedModeBanner: false,
+        home: SplashScreen(),
+      ),
     );
   }
-}
-
-Widget textTheme(String label, Color color, double size) {
-  return Text(
-    label,
-    style: TextStyle(color: color, fontSize: size),
-  );
 }
 
 class HomeScreen extends StatefulWidget {
@@ -27,43 +26,98 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  bool _isEnglish = true;
+  bool _isVnese = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-          child: Container(
-        margin: EdgeInsets.only(top: 30.0, bottom: 20.0),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            textTheme('Welcome to Sioux', Colors.grey, 50.0),
-            Container(
-              width: 300.0,
-              height: 300.0,
-              margin: EdgeInsets.symmetric(vertical: 20.0),
-              decoration: BoxDecoration(
-                  image: DecorationImage(
-                      image: AssetImage('images/profile_pic.jpg')),
-                  shape: BoxShape.circle),
-            ),
-            textTheme('Mr. Brown Smith', Colors.grey, 30.0),
-            textTheme('Job title', Colors.grey, 20.0),
-            Container(
-              margin: EdgeInsets.only(top: 30.0),
-              child: RaisedButton(
-                shape: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(5.0)),
-                    borderSide: BorderSide(width: 0.0, color: Colors.grey)),
-                color: Colors.grey,
-                child: textTheme('See who you will meet', Colors.white, 15.0),
-                onPressed: () => Navigator.of(context).push(
-                    MaterialPageRoute(builder: (context) => SeePersonInCharge())),
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisSize: MainAxisSize.max,
+        children: <Widget>[
+          Align(
+            alignment: Alignment.topCenter,
+            child: Container(
+              margin: const EdgeInsets.only(top: 20.0),
+              height: 120.0,
+              width: 700.0,
+              child: Text(
+                'Please choose your profile to continue your session',
+                style: TextStyle(
+                  fontSize: 48.0,
+                  color: Color(0xFF4F4F4F),
+                  fontWeight: FontWeight.w500,
+                ),
+                textAlign: TextAlign.center,
               ),
-            )
-          ],
-        ),
-      )),
+            ),
+          ),
+          Expanded(
+            child: Container(
+              child: GridView.count(
+                crossAxisCount: 4,
+                scrollDirection: Axis.vertical,
+                physics: ScrollPhysics(parent: BouncingScrollPhysics()),
+                children: List.generate(10, (index) {
+                  return Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      GestureDetector(
+                        child: Image.asset(index == 0
+                            ? 'images/not_checking.png'
+                            : 'images/checked_in.png'),
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => CheckinScreen()));
+                        },
+                      ),
+                      Container(
+                          margin: const EdgeInsets.only(top: 10.0),
+                          child: Text(
+                            index == 0
+                                ? 'Not checking yet?'
+                                : 'Anonymous $index',
+                            style: TextStyle(
+                                fontSize: 24.0, fontWeight: FontWeight.w500),
+                          ))
+                    ],
+                  );
+                }),
+              ),
+            ),
+          ),
+          Container(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                FlatButton(
+                  textColor: _isEnglish ? Colors.black : Color(0xFFBDBDBD),
+                  child: Text('English'),
+                  onPressed: () {
+                    setState(() {
+                      _isEnglish = true;
+                      _isVnese = false;
+                    });
+                  },
+                ),
+                FlatButton(
+                  textColor: _isVnese ? Colors.black : Color(0xFFBDBDBD),
+                  child: Text('Tiếng Việt'),
+                  onPressed: () {
+                    setState(() {
+                      _isVnese = true;
+                      _isEnglish = false;
+                    });
+                  },
+                )
+              ],
+            ),
+          )
+        ],
+      ),
     );
   }
 }
