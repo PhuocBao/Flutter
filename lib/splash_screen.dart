@@ -1,7 +1,9 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_demo_wireframe_design/main.dart';
+import 'package:flutter_demo_wireframe_design/navigation_animation.dart';
 
 class SplashScreen extends StatefulWidget {
   _SplashScreenState createState() => _SplashScreenState();
@@ -15,8 +17,8 @@ class _SplashScreenState extends State<SplashScreen>
 
   initState() {
     super.initState();
-    controller = AnimationController(
-        duration: const Duration(seconds: 2), vsync: this);
+    controller =
+        AnimationController(duration: const Duration(seconds: 2), vsync: this);
     final CurvedAnimation curve =
         CurvedAnimation(parent: controller, curve: Curves.bounceOut);
     textAnimation = Tween(begin: 0.0, end: 35.0).animate(curve);
@@ -26,8 +28,9 @@ class _SplashScreenState extends State<SplashScreen>
       });
     controller.forward();
     Future.delayed(Duration(seconds: 3), () {
-      Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => HomeScreen()));
+      // Navigator.pushReplacement(
+      //     context, MaterialPageRoute(builder: (context) => HomeScreen()));
+      Navigator.pushReplacement(context, SlideLeftNavigation(widget: HomeScreen()));
     });
   }
 

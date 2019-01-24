@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_demo_wireframe_design/discover_screen.dart';
+import 'package:flutter_demo_wireframe_design/main.dart';
 import 'package:flutter_demo_wireframe_design/user.dart';
 import 'package:flutter_demo_wireframe_design/user_provider.dart';
 import 'package:flutter_demo_wireframe_design/input_name.dart' as input;
+import 'constants.dart';
 
 class WelcomeScreen extends StatefulWidget {
   _WelcomeScreenState createState() => _WelcomeScreenState();
@@ -140,11 +142,29 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
-                Image.asset(
-                  'images/checked_in.png',
-                  width: 160.0,
-                  height: 160.0,
-                ),
+                StreamBuilder<User>(
+                    stream: _userBloc.user,
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        int spacePos = snapshot.data.name.indexOf(' ');
+                        String animalName =
+                            snapshot.data.name.substring(spacePos + 1);
+                        for (var i = 0; i < kAnimalAvatar.length; i++) {
+                          if (kAnimalAvatar
+                                  .elementAt(i)
+                                  .contains(animalName, 16) ==
+                              true) {
+                            return Image.asset(
+                              kAnimalAvatar.elementAt(i),
+                              width: 160.0,
+                              height: 160.0,
+                            );
+                          }
+                        }
+                      } else {
+                        return Container();
+                      }
+                    }),
                 StreamBuilder<User>(
                   stream: _userBloc.user,
                   builder: (context, snapshot) {
@@ -153,7 +173,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                         margin: const EdgeInsets.only(top: 20.0, left: 5.0),
                         child: Text(
                           '${snapshot.data.name}',
-                          style: TextStyle(color: Colors.black, fontSize: 36.0),
+                          style: TextStyle(color: Colors.black, fontSize: 20.0),
                           textAlign: TextAlign.center,
                         ),
                       );

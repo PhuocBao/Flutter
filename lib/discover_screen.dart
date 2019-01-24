@@ -4,6 +4,7 @@ import 'package:flutter_demo_wireframe_design/user_provider.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:flutter_demo_wireframe_design/input_name.dart' as input;
 import 'package:flutter_demo_wireframe_design/welcome_screen.dart';
+import 'package:dots_indicator/dots_indicator.dart';
 
 class DiscoverScreen extends StatefulWidget {
   @override
@@ -16,13 +17,12 @@ class _MyAppState extends State<DiscoverScreen> {
     'videos/sioux1.mp4',
     'videos/sioux2.mp4'
   ];
-  final List<Widget> videos = List();
 
   @override
   Widget build(BuildContext context) {
     int _index = 1;
     return UserProvider(
-          child: Scaffold(
+      child: Scaffold(
           appBar: PreferredSize(
             preferredSize: Size(AppBar().preferredSize.width, 120.0),
             child: AppBar(
@@ -64,19 +64,36 @@ class _MyAppState extends State<DiscoverScreen> {
                       index: _index,
                       onIndexChanged: (index) {
                         _index = index;
-                        print(_index);
+                        // print('index pos: $_index');
                       },
                       itemBuilder: (context, index) {
-                        if (index == _index) {
-                          return CustomPlayer(videoUrl: videosUrl[_index],);
-                        } else {
-                          return Image.asset('images/place_holder.jpg');
-                        }
+                        return ClipRRect(
+                          child: index == _index
+                              ? CustomPlayer(
+                                  videoUrl: videosUrl[_index],
+                                )
+                              : Image.asset('images/place_holder.jpg'),
+                          borderRadius: BorderRadius.circular(8.0),
+                        );
                       },
-                      viewportFraction: 0.8,
+                      viewportFraction: 0.83,
                       scale: 0.9,
                     ),
                   ),
+                ),
+              ),
+              Text(
+                'Sioux - We bring high-tech to life',
+                style: TextStyle(color: Color(0xFF4F4F4F), fontSize: 24.0),
+              ),
+              Container(
+                margin: const EdgeInsets.symmetric(vertical: 5.0),
+                child: DotsIndicator(
+                  numberOfDot: videosUrl.length,
+                  dotActiveColor: Color(0xFF4F4F4F),
+                  dotSize: Size.square(8.0),
+                  dotActiveSize: Size.square(8.0),
+                  position: _index,
                 ),
               ),
               Row(
@@ -88,7 +105,7 @@ class _MyAppState extends State<DiscoverScreen> {
                       .createState()
                       .navigateButton('Provide feedback', () {})
                 ],
-              )
+              ),
             ],
           )),
     );

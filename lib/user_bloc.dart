@@ -17,8 +17,8 @@ class UserBloc {
     _videoController.add(controller);
   }
 
-  Future<void> addUser(String uName) async {
-    _user.name = uName;
+  Future<void> addUserName(String name) async {
+    _user.name = name;
     _userController.add(_user);
   }
 

@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:flutter_demo_wireframe_design/full_screen.dart';
 import 'package:flutter_demo_wireframe_design/user_provider.dart';
 import 'package:flutter_demo_wireframe_design/video_session.dart';
 import 'package:intl/intl.dart';
@@ -117,7 +116,6 @@ class _CustomPlayerState extends State<CustomPlayer>
                             .seekTo(Duration(seconds: value.toInt()));
                       });
                     },
-                    //
                     max: controller.value.initialized
                         ? controller.value.duration.inSeconds.toDouble()
                         : 0.0,
@@ -151,17 +149,7 @@ class _CustomPlayerState extends State<CustomPlayer>
                           style: TextStyle(color: Colors.white),
                         ),
                       ),
-                      _customIconButton(
-                        Icons.zoom_out_map,
-                        36.0,
-                        () {
-                          _videoBloc.saveCurrentState(controller);
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => FullScreen()));
-                        },
-                      ),
+                      _customIconButton(Icons.zoom_out_map, 36.0, () {}),
                     ],
                   )
                 ],

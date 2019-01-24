@@ -14,16 +14,10 @@ class _CheckinScreenState extends State<CheckinScreen> {
   Widget build(BuildContext context) {
     SwiperPluginConfig _config;
     final _userBloc = UserProvider.of(context);
-    // final screens = [
-    //   InputName(
-    //     config: _config,
-    //   ),
-    //   VisitPurpose()
-    // ];
     return Scaffold(
-      resizeToAvoidBottomPadding: false,
+      // resizeToAvoidBottomPadding: false,
       appBar: PreferredSize(
-        preferredSize: Size(MediaQuery.of(context).size.width, 100.0),
+        preferredSize: Size(MediaQuery.of(context).size.width, 80.0),
         child: AppBar(
           flexibleSpace: Center(
             child: Text(
