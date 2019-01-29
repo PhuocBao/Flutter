@@ -1,12 +1,9 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/physics.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_demo_wireframe_design/check_in.dart';
 import 'package:flutter_demo_wireframe_design/splash_screen.dart';
 import 'package:flutter_demo_wireframe_design/user_provider.dart';
-import 'dart:math' as math;
 import 'constants.dart';
 
 void main() => runApp(MyApp());
@@ -18,7 +15,6 @@ class MyApp extends StatelessWidget {
         [DeviceOrientation.landscapeLeft, DeviceOrientation.landscapeRight]);
     return UserProvider(
       child: MaterialApp(
-        theme: ThemeData(primaryColor: Color(0xFF828282)),
         debugShowCheckedModeBanner: false,
         home: SplashScreen(),
       ),
@@ -100,10 +96,12 @@ class _HomeScreenState extends State<HomeScreen>
                             height: 160.08,
                           ),
                           onTap: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => CheckinScreen()));
+                            if (index == 0) {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => CheckinScreen()));
+                            }
                           },
                         ),
                       ),

@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_demo_wireframe_design/discover_screen.dart';
-import 'package:flutter_demo_wireframe_design/main.dart';
 import 'package:flutter_demo_wireframe_design/user.dart';
 import 'package:flutter_demo_wireframe_design/user_provider.dart';
 import 'package:flutter_demo_wireframe_design/input_name.dart' as input;
-import 'constants.dart';
 
 class WelcomeScreen extends StatefulWidget {
   _WelcomeScreenState createState() => _WelcomeScreenState();
@@ -146,21 +144,11 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                     stream: _userBloc.user,
                     builder: (context, snapshot) {
                       if (snapshot.hasData) {
-                        int spacePos = snapshot.data.name.indexOf(' ');
-                        String animalName =
-                            snapshot.data.name.substring(spacePos + 1);
-                        for (var i = 0; i < kAnimalAvatar.length; i++) {
-                          if (kAnimalAvatar
-                                  .elementAt(i)
-                                  .contains(animalName, 16) ==
-                              true) {
-                            return Image.asset(
-                              kAnimalAvatar.elementAt(i),
-                              width: 160.0,
-                              height: 160.0,
-                            );
-                          }
-                        }
+                        return Image.asset(
+                          snapshot.data.avatar,
+                          width: 160.0,
+                          height: 160.0,
+                        );
                       } else {
                         return Container();
                       }

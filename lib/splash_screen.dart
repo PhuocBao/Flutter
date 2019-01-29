@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:flutter_demo_wireframe_design/main.dart';
 import 'package:flutter_demo_wireframe_design/navigation_animation.dart';
 
@@ -30,7 +29,8 @@ class _SplashScreenState extends State<SplashScreen>
     Future.delayed(Duration(seconds: 3), () {
       // Navigator.pushReplacement(
       //     context, MaterialPageRoute(builder: (context) => HomeScreen()));
-      Navigator.pushReplacement(context, SlideLeftNavigation(widget: HomeScreen()));
+      Navigator.pushReplacement(
+          context, SlideLeftNavigation(widget: HomeScreen()));
     });
   }
 

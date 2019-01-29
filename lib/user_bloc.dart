@@ -2,20 +2,16 @@ import 'dart:async';
 
 import 'package:flutter_demo_wireframe_design/user.dart';
 import 'package:rxdart/rxdart.dart';
-import 'package:video_player/video_player.dart';
 
 class UserBloc {
   User _user = User();
+  List<User> _users = List();
 
   Observable<User> get user => _userController.stream;
   final _userController = BehaviorSubject<User>();
 
-  Observable<VideoPlayerController> get video => _videoController.stream;
-  final _videoController = BehaviorSubject<VideoPlayerController>();
-
-  Future<void> saveCurrentState(VideoPlayerController controller) async {
-    _videoController.add(controller);
-  }
+  Observable<List<User>> get users => _usersController.stream;
+  final _usersController = PublishSubject<List<User>>();
 
   Future<void> addUserName(String name) async {
     _user.name = name;
@@ -27,7 +23,33 @@ class UserBloc {
     _userController.add(_user);
   }
 
+  Future<void> addAvatar(String avatarUrl) async {
+    _user.avatar = avatarUrl;
+    _userController.add(_user);
+  }
+
+  Future<void> addUser() async {
+    // if (_users.isEmpty) {
+    //   _users.add(user);
+    //   _usersController.add(_users);
+    // } else {
+    //   _users.add(user);
+    //   _usersController.add(_users);
+    //   // final temps = _users;
+    //   // _users.clear();
+    //   // temps.add(_user);
+    //   // _users = temps;
+    //   // _users.insert(0, _user);
+    // }
+    _users.add(_user);
+    _usersController.onAdd(_users);
+    for (var item in _users) {
+      print(item.name);
+    }
+  }
+
   void dispose() {
     _userController.close();
+    _usersController.close();
   }
 }

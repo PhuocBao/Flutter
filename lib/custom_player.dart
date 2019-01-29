@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:flutter_demo_wireframe_design/user_provider.dart';
 import 'package:flutter_demo_wireframe_design/video_session.dart';
 import 'package:intl/intl.dart';
 import 'package:video_player/video_player.dart';
@@ -18,7 +17,7 @@ class _CustomPlayerState extends State<CustomPlayer>
   AnimationController _animationControllerIcon;
   VideoPlayerController _playerController;
   Animation<double> _animation;
-  final VideoSession _videoSession = VideoSession();
+  // final VideoSession _videoSession = VideoSession();
   bool _isPlaying = false;
   int currentMinute = 0;
   String currentSecond = '00';
@@ -27,7 +26,7 @@ class _CustomPlayerState extends State<CustomPlayer>
     final currentTime = DateTime.now();
     print(currentTime);
     final formatTime = DateFormat('Hms').format(currentTime);
-    final newTimes = formatTime.split(':');
+    // final newTimes = formatTime.split(':');
     //newTimes include 3 element (hour:minute:second)
     //oldTimes = _videoSession.systemTime.split(":");
     //caculate timestamp:
@@ -90,7 +89,6 @@ class _CustomPlayerState extends State<CustomPlayer>
 
   Widget customPlayer(VideoPlayerController controller) {
     controller = _playerController;
-    final _videoBloc = UserProvider.of(context);
     return Container(
       child: AspectRatio(
         aspectRatio: 16 / 9,

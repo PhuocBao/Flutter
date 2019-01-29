@@ -4,6 +4,7 @@ import 'package:flutter_demo_wireframe_design/main.dart';
 import 'package:flutter_demo_wireframe_design/user_provider.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 import 'dart:math' as math;
+import 'package:flutter/services.dart';
 
 class InputName extends StatefulWidget {
   final SwiperPluginConfig config;
@@ -18,26 +19,33 @@ class InputName extends StatefulWidget {
 class _InputNameState extends State<InputName> {
   TextEditingController editingController;
   final userName;
+  bool _isKeyboardShowing = false;
 
   _InputNameState(this.editingController, this.userName);
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setEnabledSystemUIOverlays([]);
     return Center(
       child: SingleChildScrollView(
         physics: ScrollPhysics(parent: NeverScrollableScrollPhysics()),
-        child: Container(
-          height: MediaQuery.of(context).size.height - 100.0,
-          width: MediaQuery.of(context).size.width,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            mainAxisSize: MainAxisSize.max,
-            children: <Widget>[
-              Container(),
-              _mainSection(),
-              exitSection(context)
-            ],
+        child: ClipRRect(
+          borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(16.0), topRight: Radius.circular(16.0)),
+          child: Container(
+            color: Colors.white,
+            height: MediaQuery.of(context).size.height - 128.0,
+            width: MediaQuery.of(context).size.width,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisSize: MainAxisSize.max,
+              children: <Widget>[
+                Container(),
+                _mainSection(),
+                exitSection(context)
+              ],
+            ),
           ),
         ),
       ),
@@ -51,103 +59,129 @@ class _InputNameState extends State<InputName> {
   }
 
   Widget _mainSection() {
-    return Column(
-      children: <Widget>[
-        Container(
-          margin: const EdgeInsets.only(bottom: 20.0),
-          child: Text(
-            'Your name',
-            style: TextStyle(fontSize: 36.0),
+    return Container(
+      margin: EdgeInsets.only(top: 60.0),
+      child: Column(
+        children: <Widget>[
+          Container(
+            margin: const EdgeInsets.only(bottom: 20.0),
+            child: Text(
+              'Your name',
+              style: TextStyle(fontSize: 36.0, color: Color(0xFFF15D03)),
+            ),
           ),
-        ),
-        _inputNameSection(context, widget.config, editingController),
-        orSection(200.0),
-        _buttonSection(editingController),
-      ],
+          _inputNameSection(context, widget.config, editingController),
+          orSection(180.0, 20.0),
+          _buttonSection(editingController),
+        ],
+      ),
     );
   }
 
   Widget _inputNameSection(BuildContext context, SwiperPluginConfig config,
       TextEditingController textController) {
     final _userBloc = UserProvider.of(context);
-    return Container(
-      height: 72.0,
-      margin: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 120.0),
-      child: Stack(
-        children: <Widget>[
-          Center(
-            child: TextField(
-              decoration: InputDecoration(
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(50.0))),
-                  counterStyle: TextStyle(color: Colors.white)),
-              keyboardType: TextInputType.text,
-              autofocus: false,
-              maxLength: 30,
-              textCapitalization: TextCapitalization.words,
-              maxLengthEnforced: true,
-              controller: textController,
-              onChanged: (value) => _userBloc.addUserName(value),
-              onSubmitted: (string) {
-                if (string.trim().isEmpty) {
-                  _validateInput(context, 'Please input your name',
-                      'Did you forget something?');
-                } else {
-                  _userBloc.addUserName(textController.text);
-                  widget.config.controller.next(animation: true);
-                }
-              },
-            ),
-          ),
-          Align(
-            alignment: Alignment.centerRight,
-            child: Container(
-              //If maxLength or show error messages is needed, margin bottom 13.0
-              margin: const EdgeInsets.only(bottom: 13.0),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  GestureDetector(
-                    child: Text(
-                      'Clear all',
-                      style: TextStyle(color: Color(0xFF828282)),
-                    ),
-                    onTap: () {
-                      textController.clear();
-                    },
-                  ),
-                  GestureDetector(
-                    child: Container(
-                      width: 80.0,
-                      height: 57.0,
-                      margin: const EdgeInsets.only(left: 10.0),
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.all(Radius.circular(39.0)),
-                          color: Color(0xFF828282)),
-                      child: Center(
-                        child: Text(
-                          'Go',
-                          style: TextStyle(
-                              color: Colors.white, fontWeight: FontWeight.w500),
-                        ),
-                      ),
-                    ),
-                    onTap: () {
-                      if (textController.text.trim().isEmpty) {
-                        _validateInput(context, 'Please input your name',
-                            'Did you forget something?');
-                      } else {
-                        _userBloc.addUserName(textController.text);
-                        config.controller.next(animation: true);
-                      }
-                      FocusScope.of(context).requestFocus(new FocusNode());
-                    },
-                  )
-                ],
+    return Theme(
+      data: ThemeData(
+          primaryColor: Color(0xFFF15D03),
+          hintColor: Colors.white,
+          inputDecorationTheme: InputDecorationTheme(
+            border: OutlineInputBorder(
+                borderRadius: BorderRadius.all(Radius.circular(50.0))),
+          )),
+      child: Container(
+        height: 72.0,
+        width: 640.0,
+        margin: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 120.0),
+        child: Stack(
+          children: <Widget>[
+            Center(
+              child: TextField(
+                decoration: InputDecoration(
+                  fillColor: Color(0xFFF2F2F2),
+                  filled: true,
+                  hintText: 'Type your name here...',
+                  hintStyle: TextStyle(color: Color(0xFF828282)),
+                ),
+                keyboardType: TextInputType.text,
+                autofocus: false,
+                maxLength: 30,
+                textCapitalization: TextCapitalization.words,
+                maxLengthEnforced: true,
+                controller: textController,
+                onChanged: (value) => _userBloc.addUserName(value),
+                onTap: () => _isKeyboardShowing = true,
+                onSubmitted: (string) {
+                  if (string.trim().isEmpty) {
+                    _validateInput(context, 'Please input your name',
+                        'Did you forget something?');
+                  } else {
+                    _userBloc.addUserName(textController.text);
+                    widget.config.controller.next(animation: true);
+                  }
+                },
               ),
             ),
-          )
-        ],
+            Align(
+              alignment: Alignment.centerRight,
+              child: Container(
+                //If maxLength or show error messages is needed, margin bottom 13.0
+                margin: const EdgeInsets.only(bottom: 13.0),
+                child: !_isKeyboardShowing
+                    ? Container()
+                    : Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: <Widget>[
+                          GestureDetector(
+                            child: Text(
+                              'Clear all',
+                              style: TextStyle(
+                                  color: Color(0xFFF15D03),
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 15.0),
+                            ),
+                            onTap: () {
+                              textController.clear();
+                            },
+                          ),
+                          GestureDetector(
+                            child: Container(
+                              width: 65.0,
+                              height: 57.0,
+                              margin: const EdgeInsets.only(left: 10.0),
+                              decoration: BoxDecoration(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(39.0)),
+                                  color: Color(0xFFF68B1F)),
+                              child: Center(
+                                child: Text(
+                                  'Go',
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.w500),
+                                ),
+                              ),
+                            ),
+                            onTap: () {
+                              if (textController.text.trim().isEmpty) {
+                                _validateInput(
+                                    context,
+                                    'Please input your name',
+                                    'Did you forget something?');
+                              } else {
+                                _userBloc.addUserName(textController.text);
+                                config.controller.next(animation: true);
+                              }
+                              FocusScope.of(context)
+                                  .requestFocus(new FocusNode());
+                            },
+                          )
+                        ],
+                      ),
+              ),
+            )
+          ],
+        ),
       ),
     );
   }
@@ -155,7 +189,7 @@ class _InputNameState extends State<InputName> {
   _buttonSection(TextEditingController textController) {
     return RaisedButton(
       child: Padding(
-        padding: const EdgeInsets.all(10.0),
+        padding: const EdgeInsets.all(12.0),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
@@ -173,11 +207,12 @@ class _InputNameState extends State<InputName> {
           ],
         ),
       ),
-      color: Color(0xFF828282),
+      color: Color(0xFFF15D03),
       shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.all(Radius.circular(32.0))),
       onPressed: () {
-        textController.text = 'Anonymous ${kAnimal.elementAt(math.Random().nextInt(kAnimal.length))}';
+        textController.text =
+            'Anonymous ${kAnimal.elementAt(math.Random().nextInt(kAnimal.length))}';
       },
     );
   }
@@ -205,19 +240,38 @@ class _InputNameState extends State<InputName> {
 
 Widget exitSection(BuildContext context) {
   return Align(
-    alignment: Alignment.bottomLeft,
-    child: FlatButton.icon(
-      label: Text('Exit'),
-      icon: ImageIcon(AssetImage('images/exit_icon.png')),
-      onPressed: () => Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => HomeScreen())),
-    ),
-  );
+      alignment: Alignment.bottomLeft,
+      child: FlatButton(
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            Text(
+              'Exit',
+              style: TextStyle(
+                fontSize: 18.0,
+                fontWeight: FontWeight.w500,
+                color: Color(0xFFF15D03),
+              ),
+            ),
+            Container(
+              height: 28.0,
+              width: 28.16,
+              margin: const EdgeInsets.only(left: 8.0),
+              child: ImageIcon(
+                AssetImage('images/exit_icon.png'),
+                color: Color(0xFFF68B1F),
+              ),
+            ),
+          ],
+        ),
+        onPressed: () => Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (context) => HomeScreen())),
+      ));
 }
 
-Widget orSection(double width) {
+Widget orSection(double width, double marginSpace) {
   return Container(
-    margin: const EdgeInsets.symmetric(vertical: 20.0),
+    margin: EdgeInsets.symmetric(vertical: marginSpace),
     width: width,
     child: Row(
       children: <Widget>[
@@ -228,7 +282,7 @@ Widget orSection(double width) {
           ),
         ),
         Container(
-            margin: const EdgeInsets.symmetric(horizontal: 5.0),
+            margin: const EdgeInsets.symmetric(horizontal: 30.0),
             child: Center(
               child: Text(
                 'Or',
@@ -246,10 +300,11 @@ Widget orSection(double width) {
   );
 }
 
-Widget stepSection(Color stepColor) {
+Widget stepSection(Color stepColor, Color dividerColor) {
   return Align(
     alignment: Alignment.topCenter,
     child: Container(
+      margin: const EdgeInsets.only(top: 40.0),
       width: 200.0,
       height: 80.0,
       child: Row(
@@ -261,7 +316,7 @@ Widget stepSection(Color stepColor) {
             width: 40.0,
             height: 40.0,
             decoration:
-                BoxDecoration(color: Color(0xFF828282), shape: BoxShape.circle),
+                BoxDecoration(color: Color(0xFFF15D03), shape: BoxShape.circle),
             child: Center(
                 child: Text(
               '1',
@@ -273,7 +328,7 @@ Widget stepSection(Color stepColor) {
               alignment: Alignment.center,
               child: Container(
                 height: 3.0,
-                color: Color(0xFFBDBDBD),
+                color: dividerColor,
               ),
             ),
           ),
