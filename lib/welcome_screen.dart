@@ -1,43 +1,79 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_demo_wireframe_design/appbar_main.dart';
+import 'package:flutter_demo_wireframe_design/button_border.dart';
+import 'package:flutter_demo_wireframe_design/constants.dart';
+import 'package:flutter_demo_wireframe_design/custom_hero_transition.dart';
 import 'package:flutter_demo_wireframe_design/discover_screen.dart';
+import 'package:flutter_demo_wireframe_design/input_name.dart';
 import 'package:flutter_demo_wireframe_design/user.dart';
 import 'package:flutter_demo_wireframe_design/user_provider.dart';
 import 'package:flutter_demo_wireframe_design/input_name.dart' as input;
+import 'package:flutter_demo_wireframe_design/visit_purpose.dart';
 
 class WelcomeScreen extends StatefulWidget {
+  final String userName;
+  final String imgUrl;
+
+  const WelcomeScreen({Key key, this.userName, this.imgUrl}) : super(key: key);
+
   _WelcomeScreenState createState() => _WelcomeScreenState();
 }
 
 class _WelcomeScreenState extends State<WelcomeScreen> {
+  String _avatarUrl;
+  @override
+  void initState() {
+    int spacePos = widget.userName.indexOf(' ');
+    String animalName = widget.userName.substring(spacePos + 1);
+    if (widget.userName.contains('Anonymous')) {
+      for (var i = 0; i < kAnimalAvatar.length; i++) {
+        if (kAnimalAvatar.elementAt(i).contains(animalName.toLowerCase(), 16) == true) {
+          _avatarUrl = kAnimalAvatar.elementAt(i);
+          break;
+        }
+      }
+    } else {
+      _avatarUrl = 'images/anonymous_bear.png';
+    }
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
+    final _userBloc = UserProvider.of(context);
+    // _userBloc.addAvatar(_avatarUrl);
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 0.0,
-        leading: IconButton(
-          icon: Icon(
-            Icons.arrow_back,
-            color: Colors.black,
-          ),
-          onPressed: () => Navigator.pop(context),
-        ),
-        title: Text(
-          'Back',
-          style: TextStyle(color: Colors.black),
-        ),
-      ),
-      body: Row(
-        mainAxisSize: MainAxisSize.max,
+      backgroundColor: Color(0xFFF68B1F),
+      body: Column(
         children: <Widget>[
-          _profileSection(context),
-          Container(
-            margin: const EdgeInsets.only(top: 100.0, bottom: 160.0),
-            child: VerticalDivider(
-              color: Colors.black,
+          AppBarMain(
+            content: 'Hi, you are going to meet',
+            leadingText: 'Back',
+            isImplyLeading: true,
+          ),
+          ClipRRect(
+            borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(16.0),
+                topRight: Radius.circular(16.0)),
+            child: Container(
+              height: MediaQuery.of(context).size.height - 128.0,
+              width: MediaQuery.of(context).size.width,
+              color: Colors.white,
+              child: Row(
+                mainAxisSize: MainAxisSize.max,
+                children: <Widget>[
+                  _profileSection(context),
+                  Container(
+                    margin: const EdgeInsets.only(top: 100.0, bottom: 160.0),
+                    child: VerticalDivider(
+                      color: Colors.black,
+                    ),
+                  ),
+                  _whoInCharge(context),
+                ],
+              ),
             ),
           ),
-          _whoInCharge(context),
         ],
       ),
     );
@@ -46,28 +82,20 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   _whoInCharge(BuildContext context) {
     return Container(
       width: MediaQuery.of(context).size.width * 3 / 4 - 16.0,
-      height: MediaQuery.of(context).size.height,
+      height: MediaQuery.of(context).size.height - 128.0,
+      margin: EdgeInsets.only(top: 60.0),
       child: Center(
         child: Stack(
           children: <Widget>[
             Align(
               alignment: Alignment.topCenter,
-              child: Text(
-                'Hi, you are going to meet',
-                style: TextStyle(
-                    color: Color(0xFF4F4F4F),
-                    fontSize: 48.0,
-                    fontWeight: FontWeight.w500),
-              ),
-            ),
-            Center(
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
                   Image.asset(
                     'images/profile_pic.jpg',
-                    height: 160.0,
-                    width: 160.0,
+                    height: 160.08,
+                    width: 160.08,
                   ),
                   Container(
                     margin: const EdgeInsets.symmetric(vertical: 26.0),
@@ -133,10 +161,12 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     final _userBloc = UserProvider.of(context);
     return Container(
       width: MediaQuery.of(context).size.width / 4,
-      height: MediaQuery.of(context).size.height,
+      height: MediaQuery.of(context).size.height - 128.0,
+      margin: EdgeInsets.only(top: 60.0),
       child: Stack(
         children: <Widget>[
-          Center(
+          Align(
+            alignment: Alignment.topCenter,
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
@@ -144,42 +174,44 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                     stream: _userBloc.user,
                     builder: (context, snapshot) {
                       if (snapshot.hasData) {
-                        return Image.asset(
-                          snapshot.data.avatar,
-                          width: 160.0,
-                          height: 160.0,
+                        return CustomHeroTransition(
+                          imageUrl: snapshot.data.avatar,
+                          name: snapshot.data.name,
                         );
                       } else {
-                        return Container();
+                        return CustomHeroTransition(
+                          imageUrl: _avatarUrl,
+                          name: widget.userName,
+                        );
                       }
                     }),
+                // StreamBuilder<User>(
+                //   stream: _userBloc.user,
+                //   builder: (context, snapshot) {
+                //     if (snapshot.hasData) {
+                //       return Container(
+                //         margin: const EdgeInsets.only(top: 23.5,bottom: 6.0),
+                //         child: Text(
+                //           '${snapshot.data.name}',
+                //           style: TextStyle(color: Colors.black, fontSize: 20.0),
+                //           textAlign: TextAlign.center,
+                //         ),
+                //       );
+                //     } else {
+                //       return Container();
+                //     }
+                //   },
+                // ),
                 StreamBuilder<User>(
                   stream: _userBloc.user,
                   builder: (context, snapshot) {
                     if (snapshot.hasData) {
                       return Container(
-                        margin: const EdgeInsets.only(top: 20.0, left: 5.0),
-                        child: Text(
-                          '${snapshot.data.name}',
-                          style: TextStyle(color: Colors.black, fontSize: 20.0),
-                          textAlign: TextAlign.center,
-                        ),
-                      );
-                    } else {
-                      return CircularProgressIndicator();
-                    }
-                  },
-                ),
-                StreamBuilder<User>(
-                  stream: _userBloc.user,
-                  builder: (context, snapshot) {
-                    if (snapshot.hasData) {
-                      return Container(
-                        margin: const EdgeInsets.symmetric(vertical: 20.0),
+                        margin: const EdgeInsets.only(bottom: 18.0),
                         child: Text(
                           snapshot.data.role,
                           style: TextStyle(
-                              color: Color(0xFF828282), fontSize: 23.5),
+                              color: Color(0xFF00AEEF), fontSize: 23.5),
                         ),
                       );
                     } else {
@@ -187,14 +219,15 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                     }
                   },
                 ),
-                Text(
-                  'Edit profile',
-                  style: TextStyle(color: Color(0xFF4F4F4F), fontSize: 18.0),
+                ButtonBorder(
+                  content: 'Edit profile',
+                  callback: () => Navigator.pushReplacement(context,
+                      MaterialPageRoute(builder: (context) => CheckinScreen())),
                 ),
               ],
             ),
           ),
-          input.exitSection(context)
+          VisitPurpose().createState().exitSection(context)
         ],
       ),
     );

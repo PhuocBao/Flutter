@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_demo_wireframe_design/custom_player.dart';
+import 'package:flutter_demo_wireframe_design/input_name.dart';
 import 'package:flutter_demo_wireframe_design/user_provider.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:flutter_demo_wireframe_design/input_name.dart' as input;
@@ -100,7 +101,7 @@ class _MyAppState extends State<DiscoverScreen> {
                 mainAxisSize: MainAxisSize.max,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
-                  input.exitSection(context),
+                  CheckinScreen().createState().exitSection(context),
                   WelcomeScreen()
                       .createState()
                       .navigateButton('Provide feedback', () {})
