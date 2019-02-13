@@ -155,7 +155,10 @@ class _CheckinScreenState extends State<CheckinScreen>
                     ),
                   ],
                 )),
-            onTap: () => FocusScope.of(context).requestFocus(new FocusNode())),
+            onTap: () {
+              FocusScope.of(context).requestFocus(new FocusNode());
+              // _isTextFieldShowing = false;
+            }),
       ),
     );
   }
@@ -217,30 +220,35 @@ class _CheckinScreenState extends State<CheckinScreen>
                   hintStyle: TextStyle(color: Color(0xFF828282)),
                 ),
                 keyboardType: TextInputType.text,
+                cursorColor: Colors.black,
                 autofocus: false,
                 autocorrect: false,
                 maxLength: 30,
                 textCapitalization: TextCapitalization.words,
                 maxLengthEnforced: true,
                 controller: textController,
-                //onChanged: (value) => _userBloc.addUserName(value),
-                focusNode: textfocus,
-                onTap: () => _isTextFieldShowing = true,
-                onSubmitted: (string) {
-                  if (string.trim().isEmpty) {
-                    _validateInput(context, 'Please input your name',
-                        'Did you forget something?');
-                    // _controller.reset();
+                onChanged: (value) {
+                  if (value.isEmpty) {
+                    setState(() {
+                      _isTextFieldShowing = false;
+                    });
                   } else {
-                    _userBloc.addUserName(textController.text);
-                    Navigator.push(
-                        context,
-                        SlideLeftNavigation(
-                            widget: VisitPurpose(
-                          userName: textController.text,
-                        )));
-                    FocusScope.of(context).requestFocus(new FocusNode());
+                    setState(() {
+                      _isTextFieldShowing = true;
+                    });
                   }
+                },
+                focusNode: textfocus,
+                // onTap: () {},
+                onSubmitted: (string) {
+                  _userBloc.addUserName(textController.text);
+                  Navigator.push(
+                      context,
+                      SlideLeftNavigation(
+                          widget: VisitPurpose(
+                        userName: textController.text,
+                      )));
+                  FocusScope.of(context).requestFocus(new FocusNode());
                 },
               ),
             ),
@@ -264,6 +272,11 @@ class _CheckinScreenState extends State<CheckinScreen>
                             ),
                             onTap: () {
                               textController.clear();
+                              if (!textfocus.hasFocus || _isTextFieldShowing) {
+                                setState(() {
+                                  _isTextFieldShowing = false;
+                                });
+                              }
                             },
                           ),
                           GestureDetector(
@@ -285,23 +298,14 @@ class _CheckinScreenState extends State<CheckinScreen>
                               ),
                             ),
                             onTap: () {
-                              if (textController.text.trim().isEmpty) {
-                                _validateInput(
-                                    context,
-                                    'Please input your name',
-                                    'Did you forget something?');
-                              } else {
-                                // _userBloc.addUserName(textController.text);
-                                Navigator.push(
-                                    context,
-                                    SlideLeftNavigation(
-                                        widget: VisitPurpose(
-                                      userName: textController.text,
-                                    )));
-                                FocusScope.of(context)
-                                    .requestFocus(new FocusNode());
-                                // config.controller.next(animation: true);
-                              }
+                              Navigator.push(
+                                  context,
+                                  SlideLeftNavigation(
+                                      widget: VisitPurpose(
+                                    userName: textController.text,
+                                  )));
+                              FocusScope.of(context)
+                                  .requestFocus(new FocusNode());
                               // Navigator.push(
                               //     context,
                               //     SlideLeftNavigation(
@@ -317,26 +321,6 @@ class _CheckinScreenState extends State<CheckinScreen>
           ],
         ),
       ),
-    );
-  }
-
-  _validateInput(BuildContext context, String title, String content) {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: Text(title),
-          content: Text(content),
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
-          actions: <Widget>[
-            FlatButton(
-              child: Text('OK'),
-              onPressed: () => Navigator.pop(context),
-            )
-          ],
-        );
-      },
     );
   }
 
