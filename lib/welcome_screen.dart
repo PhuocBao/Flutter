@@ -6,15 +6,12 @@ import 'package:flutter_demo_wireframe_design/custom_hero_transition.dart';
 import 'package:flutter_demo_wireframe_design/discover_screen.dart';
 import 'package:flutter_demo_wireframe_design/input_name.dart';
 import 'package:flutter_demo_wireframe_design/user.dart';
-import 'package:flutter_demo_wireframe_design/user_provider.dart';
-import 'package:flutter_demo_wireframe_design/input_name.dart' as input;
 import 'package:flutter_demo_wireframe_design/visit_purpose.dart';
 
 class WelcomeScreen extends StatefulWidget {
-  final String userName;
-  final String imgUrl;
+  final User user;
 
-  const WelcomeScreen({Key key, this.userName, this.imgUrl}) : super(key: key);
+  const WelcomeScreen({Key key, this.user}) : super(key: key);
 
   _WelcomeScreenState createState() => _WelcomeScreenState();
 }
@@ -23,9 +20,9 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   String _avatarUrl;
   @override
   void initState() {
-    int spacePos = widget.userName.indexOf(' ');
-    String animalName = widget.userName.substring(spacePos + 1);
-    if (widget.userName.contains('Anonymous')) {
+    int spacePos = widget.user.name.indexOf(' ');
+    String animalName = widget.user.name.substring(spacePos + 1);
+    if (widget.user.name.contains('Anonymous')) {
       for (var i = 0; i < kAnimalAvatar.length; i++) {
         if (kAnimalAvatar.elementAt(i).contains(animalName.toLowerCase(), 16) == true) {
           _avatarUrl = kAnimalAvatar.elementAt(i);
@@ -40,7 +37,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final _userBloc = UserProvider.of(context);
+    // final _userBloc = UserProvider.of(context);
     // _userBloc.addAvatar(_avatarUrl);
     return Scaffold(
       backgroundColor: Color(0xFFF68B1F),
@@ -158,7 +155,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   }
 
   Widget _profileSection(BuildContext context) {
-    final _userBloc = UserProvider.of(context);
+    // final _userBloc = UserProvider.of(context);
     return Container(
       width: MediaQuery.of(context).size.width / 4,
       height: MediaQuery.of(context).size.height - 128.0,
@@ -170,21 +167,10 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
-                StreamBuilder<User>(
-                    stream: _userBloc.user,
-                    builder: (context, snapshot) {
-                      if (snapshot.hasData) {
-                        return CustomHeroTransition(
-                          imageUrl: snapshot.data.avatar,
-                          name: snapshot.data.name,
-                        );
-                      } else {
-                        return CustomHeroTransition(
+                CustomHeroTransition(
                           imageUrl: _avatarUrl,
-                          name: widget.userName,
-                        );
-                      }
-                    }),
+                          name: widget.user.name,
+                        ),
                 // StreamBuilder<User>(
                 //   stream: _userBloc.user,
                 //   builder: (context, snapshot) {
@@ -202,23 +188,14 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 //     }
                 //   },
                 // ),
-                StreamBuilder<User>(
-                  stream: _userBloc.user,
-                  builder: (context, snapshot) {
-                    if (snapshot.hasData) {
-                      return Container(
+                Container(
                         margin: const EdgeInsets.only(bottom: 18.0),
                         child: Text(
-                          snapshot.data.role,
+                          widget.user.role == null ? '' : widget.user.role,
                           style: TextStyle(
-                              color: Color(0xFF00AEEF), fontSize: 23.5),
+                              color: Color(widget.user.role == 'Guest' ? 0xFF70BF43 : 0xFF00AEEF), fontSize: 23.5),
                         ),
-                      );
-                    } else {
-                      return Container();
-                    }
-                  },
-                ),
+                      ),
                 ButtonBorder(
                   content: 'Edit profile',
                   callback: () => Navigator.pushReplacement(context,

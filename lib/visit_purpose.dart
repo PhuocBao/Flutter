@@ -3,7 +3,7 @@ import 'package:flutter_demo_wireframe_design/appbar_main.dart';
 import 'package:flutter_demo_wireframe_design/constants.dart';
 import 'package:flutter_demo_wireframe_design/input_name.dart';
 import 'package:flutter_demo_wireframe_design/main.dart';
-import 'package:flutter_demo_wireframe_design/user_provider.dart';
+import 'package:flutter_demo_wireframe_design/user.dart';
 import 'package:flutter_demo_wireframe_design/welcome_screen.dart';
 
 class VisitPurpose extends StatefulWidget {
@@ -75,8 +75,8 @@ class _VisitPurposeState extends State<VisitPurpose> {
 
   @override
   Widget build(BuildContext context) {
-    final _userBloc = UserProvider.of(context);
-    _userBloc.addAvatar(_avatarUrl);
+    // final _userBloc = UserProvider.of(context);
+    // _userBloc.addAvatar(_avatarUrl);
     return Scaffold(
       backgroundColor: Color(0xFFF68B1F),
       body: Column(
@@ -98,7 +98,7 @@ class _VisitPurposeState extends State<VisitPurpose> {
                 children: <Widget>[
                   CheckinScreen()
                       .createState()
-                      .stepSection(Color(0xFFF15D03), Color(0xFFF15D03)),
+                      .stepSection(Color(0xFFF15D03), Color(0xFFF15D03), true),
                   Center(
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
@@ -114,24 +114,24 @@ class _VisitPurposeState extends State<VisitPurpose> {
                               const EdgeInsets.only(top: 38.0, bottom: 32.0),
                           child:
                               customButton('Candidate', Color(0xFF00AEEF), () {
-                            _userBloc.addRole('Candidate');
+                            // _userBloc.addRole('Candidate');
                             // _userBloc.addUser();
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) => WelcomeScreen(
-                                          userName: widget.userName,
+                                          user: User(name: widget.userName,avatar: _avatarUrl,role: 'Candidate'),
                                         )));
                           }),
                         ),
                         customButton('Guest', Color(0xFF70BF43), () {
-                          _userBloc.addRole('Guest');
+                          // _userBloc.addRole('Guest');
                           // _userBloc.addUser();
                           Navigator.push(
                               context,
                               MaterialPageRoute(
                                   builder: (context) => WelcomeScreen(
-                                        userName: widget.userName,
+                                        user: User(name: widget.userName,avatar: _avatarUrl,role: 'Guest'),
                                       )));
                         }),
                         CheckinScreen().createState().orSection(200.0, 32.0),
@@ -139,13 +139,13 @@ class _VisitPurposeState extends State<VisitPurpose> {
                           'Just skip',
                           Color(0xFFF15D03),
                           () {
-                            _userBloc.addRole('');
+                            // _userBloc.addRole('');
                             // _userBloc.addUser();
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) => WelcomeScreen(
-                                          userName: widget.userName,
+                                          user: User(name: widget.userName,avatar: _avatarUrl,role: ''),
                                         )));
                           },
                         ),
@@ -169,21 +169,21 @@ class _VisitPurposeState extends State<VisitPurpose> {
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
+              Container(
+                height: 28.0,
+                width: 28.16,
+                margin: const EdgeInsets.only(right: 8.0),
+                child: ImageIcon(
+                  AssetImage('images/exit_icon.png'),
+                  color: Color(0xFFF68B1F),
+                ),
+              ),
               Text(
                 'Exit',
                 style: TextStyle(
                   fontSize: 18.0,
                   fontWeight: FontWeight.w500,
                   color: Color(0xFFF15D03),
-                ),
-              ),
-              Container(
-                height: 28.0,
-                width: 28.16,
-                margin: const EdgeInsets.only(left: 8.0),
-                child: ImageIcon(
-                  AssetImage('images/exit_icon.png'),
-                  color: Color(0xFFF68B1F),
                 ),
               ),
             ],

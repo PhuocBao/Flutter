@@ -3,13 +3,14 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/physics.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_demo_wireframe_design/check_in.dart';
 import 'package:flutter_demo_wireframe_design/custom_hero_transition.dart';
 import 'package:flutter_demo_wireframe_design/input_name.dart';
 import 'package:flutter_demo_wireframe_design/push_up_navigation.dart';
-import 'package:flutter_demo_wireframe_design/splash_screen.dart';
+import 'package:flutter_demo_wireframe_design/translations.dart';
+import 'package:flutter_demo_wireframe_design/user.dart';
 import 'package:flutter_demo_wireframe_design/user_provider.dart';
 import 'package:flutter_demo_wireframe_design/welcome_screen.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'constants.dart';
 
 void main() => runApp(MyApp());
@@ -22,6 +23,12 @@ class MyApp extends StatelessWidget {
     return UserProvider(
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
+        localizationsDelegates: [
+          const TranslationsDelegate(),
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+        ],
+        supportedLocales: [const Locale('en', ''), const Locale('vi', '')],
         home: HomeScreen(),
       ),
     );
@@ -118,6 +125,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    // final _userBloc = UserProvider.of(context);
+    // _userBloc.changeLanguage(true);
     return Scaffold(
       body: isTapChecking
           ? Container(
@@ -154,19 +163,19 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                     height: 120.0,
                     width: 700.0,
                     child: Text(
-                      'Please choose your profile to continue your session',
-                      style: TextStyle(
-                        fontSize: 48.0,
-                        color: Color(0xFF4F4F4F),
-                        fontWeight: FontWeight.w500,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
+                              'Please choose your profile to continue your session',
+                              style: TextStyle(
+                                fontSize: 48.0,
+                                color: Color(0xFF333333),
+                                fontWeight: FontWeight.w500,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
                   ),
                 ),
                 Expanded(
                   child: Container(
-                    margin: const EdgeInsets.only(top: 20.0),
+                    margin: const EdgeInsets.only(top: 30.0),
                     child: GridView.count(
                       crossAxisCount: 4,
                       scrollDirection: Axis.vertical,
@@ -206,9 +215,9 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                                             widget: CheckinScreen()));
                                   }),
                               Container(
-                                  margin: EdgeInsets.only(top: 24.95),
+                                  margin: EdgeInsets.only(top: 22.0),
                                   child: Text(
-                                    'Not checking yet?',
+                                    'Not checked in yet?',
                                     style: TextStyle(
                                         fontSize: 24.0,
                                         fontWeight: FontWeight.w500,
@@ -231,51 +240,19 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                               ),
                             ),
                             onTap: () {
+                              // Navigator.push(context, MaterialPageRoute(builder: (context) => HeroTempScreen(
+                              //   name: anonymousName,
+                              //   imgUrl: kAnimalAvatar.elementAt(index - 1),
+                              // )));
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
                                       builder: (context) => WelcomeScreen(
-                                            userName: anonymousName,
-                                            imgUrl: kAnimalAvatar.elementAt(index - 1),
+                                            user: User(name: anonymousName),
                                           )));
                             },
                           );
                         }
-                        // return Column(
-                        //   mainAxisSize: MainAxisSize.min,
-                        //   crossAxisAlignment: CrossAxisAlignment.center,
-                        //   children: <Widget>[
-                        //     index == 0
-                        //         ?
-                        //         : GestureDetector(
-                        //             child: SlideTransition(
-                        //               position: ani[index % 4],
-                        //               child: SlideTransition(
-                        //                 position: _animation[index % 4],
-                        //                 child: CustomHeroTransition(
-                        //                   imageUrl: kAnimalAvatar.elementAt(index - 1),
-                        //                 ),
-                        //               ),
-                        //             ),
-                        //             // onTap: () {
-                        //             //   Navigator.push(
-                        //             //       context,
-                        //             //       MaterialPageRoute(builder: (context) => HomeTransitionScreen()));
-                        //             // },
-                        //           ),
-                        //     Container(
-                        //         margin: const EdgeInsets.only(top: 24.95),
-                        //         child: Text(
-                        //           index == 0
-                        //               ? 'Not checking yet?'
-                        //               : 'Anonymous ${kAnimal.elementAt(index - 1)[0].toUpperCase()}${kAnimal.elementAt(index - 1).substring(1)}',
-                        //           style: TextStyle(
-                        //             fontSize: 20.0,
-                        //           ),
-                        //           textAlign: TextAlign.center,
-                        //         ))
-                        //   ],
-                        // );
                       }),
                     ),
                   ),
@@ -292,6 +269,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                           setState(() {
                             _isEnglish = true;
                             _isVnese = false;
+                            // _userBloc.changeLanguage(_isEnglish);
                           });
                         },
                       ),
@@ -303,6 +281,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                           setState(() {
                             _isVnese = true;
                             _isEnglish = false;
+                            // _userBloc.changeLanguage(_isEnglish);
                           });
                         },
                       )

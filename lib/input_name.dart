@@ -23,7 +23,7 @@ class _CheckinScreenState extends State<CheckinScreen>
   TextEditingController editingController;
   FocusNode textfocus = FocusNode();
   final userName;
-  // bool _isKeyboardShowing = false;
+  bool _isTextFieldShowing = false;
   bool isAppbarVisible = false;
   DateTime now;
 
@@ -73,7 +73,7 @@ class _CheckinScreenState extends State<CheckinScreen>
       body: Column(
         mainAxisSize: MainAxisSize.max,
         children: <Widget>[
-          checkinSection(),
+          checkinSection(context),
           inputname(context),
           exitSection(context)
         ],
@@ -82,7 +82,8 @@ class _CheckinScreenState extends State<CheckinScreen>
     );
   }
 
-  checkinSection() {
+  checkinSection(BuildContext context) {
+    // final _userBloc = UserProvider.of(context);
     return AnimatedBuilder(
         animation: _animation2,
         builder: (context, widget) {
@@ -147,7 +148,7 @@ class _CheckinScreenState extends State<CheckinScreen>
                 width: MediaQuery.of(context).size.width,
                 child: Stack(
                   children: <Widget>[
-                    stepSection(Color(0xFFBDBDBD), Color(0xFFBDBDBD)),
+                    stepSection(Color(0xFFE0E0E0), Color(0xFFBDBDBD), false),
                     Container(
                       margin: EdgeInsets.only(top: 128.0),
                       child: _mainSection(),
@@ -224,7 +225,7 @@ class _CheckinScreenState extends State<CheckinScreen>
                 controller: textController,
                 //onChanged: (value) => _userBloc.addUserName(value),
                 focusNode: textfocus,
-                // onTap: () => _controller.forward(),
+                onTap: () => _isTextFieldShowing = true,
                 onSubmitted: (string) {
                   if (string.trim().isEmpty) {
                     _validateInput(context, 'Please input your name',
@@ -248,7 +249,7 @@ class _CheckinScreenState extends State<CheckinScreen>
               child: Container(
                 //If maxLength or show error messages is needed, margin bottom 13.0
                 margin: const EdgeInsets.only(bottom: 13.0),
-                child: !textfocus.hasFocus
+                child: !_isTextFieldShowing
                     ? Container()
                     : Row(
                         mainAxisSize: MainAxisSize.min,
@@ -290,7 +291,7 @@ class _CheckinScreenState extends State<CheckinScreen>
                                     'Please input your name',
                                     'Did you forget something?');
                               } else {
-                                _userBloc.addUserName(textController.text);
+                                // _userBloc.addUserName(textController.text);
                                 Navigator.push(
                                     context,
                                     SlideLeftNavigation(
@@ -380,7 +381,8 @@ class _CheckinScreenState extends State<CheckinScreen>
     );
   }
 
-  Widget stepSection(Color stepColor, Color dividerColor) {
+  Widget stepSection(Color stepColor, Color dividerColor,
+      [bool isStep2 = false]) {
     return Align(
       alignment: Alignment.topCenter,
       child: Container(
@@ -406,10 +408,8 @@ class _CheckinScreenState extends State<CheckinScreen>
             Expanded(
               child: Align(
                 alignment: Alignment.center,
-                child: Container(
-                  height: 3.0,
-                  color: dividerColor,
-                ),
+                child: Image.asset(
+                    isStep2 ? 'images/line2.png' : 'images/line.png'),
               ),
             ),
             Container(
@@ -442,21 +442,21 @@ class _CheckinScreenState extends State<CheckinScreen>
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: <Widget>[
+                        Container(
+                          height: 28.0,
+                          width: 28.16,
+                          margin: const EdgeInsets.only(right: 8.0),
+                          child: ImageIcon(
+                            AssetImage('images/exit_icon.png'),
+                            color: Color(0xFFF68B1F),
+                          ),
+                        ),
                         Text(
                           'Exit',
                           style: TextStyle(
                             fontSize: 18.0,
                             fontWeight: FontWeight.w500,
                             color: Color(0xFFF15D03),
-                          ),
-                        ),
-                        Container(
-                          height: 28.0,
-                          width: 28.16,
-                          margin: const EdgeInsets.only(left: 8.0),
-                          child: ImageIcon(
-                            AssetImage('images/exit_icon.png'),
-                            color: Color(0xFFF68B1F),
                           ),
                         ),
                       ],

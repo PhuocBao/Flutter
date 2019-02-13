@@ -3,7 +3,6 @@ import 'package:flutter_demo_wireframe_design/custom_player.dart';
 import 'package:flutter_demo_wireframe_design/input_name.dart';
 import 'package:flutter_demo_wireframe_design/user_provider.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
-import 'package:flutter_demo_wireframe_design/input_name.dart' as input;
 import 'package:flutter_demo_wireframe_design/welcome_screen.dart';
 import 'package:dots_indicator/dots_indicator.dart';
 

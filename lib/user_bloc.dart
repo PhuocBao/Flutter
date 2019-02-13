@@ -6,12 +6,16 @@ import 'package:rxdart/rxdart.dart';
 class UserBloc {
   User _user = User();
   List<User> _users = List();
+  // Translations _translations = Translations(Locale('en'));
 
   Observable<User> get user => _userController.stream;
   final _userController = BehaviorSubject<User>();
 
   Observable<List<User>> get users => _usersController.stream;
   final _usersController = PublishSubject<List<User>>();
+
+  // Observable<Translations> get language => _languageController.stream;
+  // final _languageController = BehaviorSubject<Translations>();
 
   Future<void> addUserName(String name) async {
     _user.name = name;
@@ -48,8 +52,17 @@ class UserBloc {
     }
   }
 
+  // Future<void> changeLanguage(bool isEnglish) async {
+  //   if (isEnglish) {
+  //     _languageController.add(await Translations.load((Locale('en'))));
+  //   } else {
+  //     _languageController.add(await Translations.load((Locale('vi'))));
+  //   }
+  // }
+
   void dispose() {
     _userController.close();
     _usersController.close();
+    // _languageController.close();
   }
 }
