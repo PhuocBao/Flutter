@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_demo_wireframe_design/constants.dart';
+import 'package:flutter_demo_wireframe_design/language_bloc.dart';
 import 'package:flutter_demo_wireframe_design/main.dart';
 import 'package:flutter_demo_wireframe_design/navigation_animation.dart';
+import 'package:flutter_demo_wireframe_design/toggle_text.dart';
+import 'package:flutter_demo_wireframe_design/translations.dart';
+import 'package:flutter_demo_wireframe_design/user_bloc.dart';
 import 'package:flutter_demo_wireframe_design/user_provider.dart';
 import 'package:flutter_demo_wireframe_design/visit_purpose.dart';
 import 'dart:math' as math;
@@ -34,7 +38,7 @@ class _CheckinScreenState extends State<CheckinScreen>
     textfocus.addListener(_onFocusChange);
     _controller = AnimationController(
       vsync: this,
-      duration: Duration(milliseconds: 350),
+      duration: Duration(milliseconds: 200),
     );
     _animation = Tween(begin: 128.0, end: 0.0)
         .animate(CurvedAnimation(curve: Curves.ease, parent: _controller))
@@ -83,7 +87,7 @@ class _CheckinScreenState extends State<CheckinScreen>
   }
 
   checkinSection(BuildContext context) {
-    // final _userBloc = UserProvider.of(context);
+    // final _languageBloc = BlocProvider.of<LanguageBloc>(context);
     return AnimatedBuilder(
         animation: _animation2,
         builder: (context, widget) {
@@ -107,13 +111,13 @@ class _CheckinScreenState extends State<CheckinScreen>
                                   _animation2.value > 0.4
                                       ? _animation2.value
                                       : 0.0),
-                              child: Text(
-                                'Check in',
-                                style: TextStyle(
-                                    fontWeight: FontWeight.w500,
-                                    fontSize: 48.0,
-                                    color: Colors.white),
-                              ),
+                              child: ToggleText(
+                                  newText: 'ckin_app_bar',
+                                  placeHolderText: Translations.of(context)
+                                      .text('ckin_app_bar'),
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 48.0,
+                                  color: Colors.white),
                             ),
                           ),
                           elevation: 0.0,
@@ -151,7 +155,7 @@ class _CheckinScreenState extends State<CheckinScreen>
                     stepSection(Color(0xFFE0E0E0), Color(0xFFBDBDBD), false),
                     Container(
                       margin: EdgeInsets.only(top: 128.0),
-                      child: _mainSection(),
+                      child: _mainSection(context),
                     ),
                   ],
                 )),
@@ -163,15 +167,17 @@ class _CheckinScreenState extends State<CheckinScreen>
     );
   }
 
-  Widget _mainSection() {
+  Widget _mainSection(BuildContext context) {
     return Center(
       child: Column(
         children: <Widget>[
           Container(
             margin: const EdgeInsets.only(bottom: 20.0),
-            child: Text(
-              'Your name',
-              style: TextStyle(fontSize: 36.0, color: Color(0xFFF15D03)),
+            child: ToggleText(
+              newText: 'your_name',
+              placeHolderText: Translations.of(context).text('your_name'),
+              fontSize: 36.0,
+              color: Color(0xFFF15D03),
             ),
           ),
           inputNameSection(context, editingController),
@@ -180,7 +186,7 @@ class _CheckinScreenState extends State<CheckinScreen>
             child: textfocus.hasFocus
                 ? Container()
                 : _animation3.value == 370.0
-                    ? orSection(180.0, 20.0)
+                    ? orSection(context, 180.0, 20.0)
                     : Container(),
           ),
           buttonSection(context, editingController),
@@ -191,7 +197,7 @@ class _CheckinScreenState extends State<CheckinScreen>
 
   Widget inputNameSection(
       BuildContext context, TextEditingController textController) {
-    final _userBloc = UserProvider.of(context);
+    // final _userBloc = BlocProvider.of<UserBloc>(context);
     return Theme(
       data: ThemeData(
           primaryColor: Color(0xFFF15D03),
@@ -216,7 +222,7 @@ class _CheckinScreenState extends State<CheckinScreen>
                           BorderSide(color: Color(0xFFF15D03), width: 0.5),
                       borderRadius: BorderRadius.circular(39.0)),
                   filled: true,
-                  hintText: 'Type your name here...',
+                  hintText: Translations.of(context).text('ckin_hint'),
                   hintStyle: TextStyle(color: Color(0xFF828282)),
                 ),
                 keyboardType: TextInputType.text,
@@ -241,7 +247,7 @@ class _CheckinScreenState extends State<CheckinScreen>
                 focusNode: textfocus,
                 // onTap: () {},
                 onSubmitted: (string) {
-                  _userBloc.addUserName(textController.text);
+                  // _userBloc.addUserName(textController.text);
                   Navigator.push(
                       context,
                       SlideLeftNavigation(
@@ -264,7 +270,7 @@ class _CheckinScreenState extends State<CheckinScreen>
                         children: <Widget>[
                           GestureDetector(
                             child: Text(
-                              'Clear all',
+                              Translations.of(context).text('clear_all'),
                               style: TextStyle(
                                   color: Color(0xFFF15D03),
                                   fontWeight: FontWeight.w500,
@@ -290,7 +296,7 @@ class _CheckinScreenState extends State<CheckinScreen>
                                   color: Color(0xFFF68B1F)),
                               child: Center(
                                 child: Text(
-                                  'Go',
+                                  Translations.of(context).text('tf_go'),
                                   style: TextStyle(
                                       color: Colors.white,
                                       fontWeight: FontWeight.w500),
@@ -325,7 +331,7 @@ class _CheckinScreenState extends State<CheckinScreen>
   }
 
   buttonSection(BuildContext context, TextEditingController textController) {
-    final _userBloc = UserProvider.of(context);
+    // final _userBloc = BlocProvider.of<UserBloc>(context);
     return RaisedButton(
       child: Padding(
         padding: const EdgeInsets.all(12.0),
@@ -333,7 +339,7 @@ class _CheckinScreenState extends State<CheckinScreen>
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
             Text(
-              'Just pick a random name',
+              Translations.of(context).text('pick_random_name'),
               style: TextStyle(color: Colors.white, fontSize: 15.0),
             ),
             Padding(
@@ -352,7 +358,7 @@ class _CheckinScreenState extends State<CheckinScreen>
       onPressed: () {
         String anonymousName =
             'Anonymous ${kAnimal.elementAt(math.Random().nextInt(kAnimal.length))}';
-        _userBloc.addUserName(anonymousName);
+        // _userBloc.addUserName(anonymousName);
         // Navigator.push(context, MaterialPageRoute(builder: (context) => VisitPurpose(userName: anonymousName,)));
         Navigator.push(
             context,
@@ -436,7 +442,7 @@ class _CheckinScreenState extends State<CheckinScreen>
                           ),
                         ),
                         Text(
-                          'Exit',
+                          Translations.of(context).text('exit'),
                           style: TextStyle(
                             fontSize: 18.0,
                             fontWeight: FontWeight.w500,
@@ -450,14 +456,17 @@ class _CheckinScreenState extends State<CheckinScreen>
                         Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => HomeScreen())),
+                                builder: (context) => BlocProvider(
+                                  bloc: LanguageBloc(),
+                                  child: HomeScreen(),
+                                ))),
                   )),
             )
           : Container(),
     );
   }
 
-  Widget orSection(double width, double marginSpace) {
+  Widget orSection(BuildContext context, double width, double marginSpace) {
     return Container(
       margin: EdgeInsets.symmetric(vertical: marginSpace),
       width: width,
@@ -473,7 +482,7 @@ class _CheckinScreenState extends State<CheckinScreen>
               margin: const EdgeInsets.symmetric(horizontal: 30.0),
               child: Center(
                 child: Text(
-                  'or',
+                  Translations.of(context).text('or'),
                   style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w500),
                 ),
               )),

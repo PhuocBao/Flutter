@@ -3,7 +3,10 @@ import 'package:flutter_demo_wireframe_design/appbar_main.dart';
 import 'package:flutter_demo_wireframe_design/constants.dart';
 import 'package:flutter_demo_wireframe_design/input_name.dart';
 import 'package:flutter_demo_wireframe_design/main.dart';
+import 'package:flutter_demo_wireframe_design/toggle_text.dart';
+import 'package:flutter_demo_wireframe_design/translations.dart';
 import 'package:flutter_demo_wireframe_design/user.dart';
+import 'package:flutter_demo_wireframe_design/user_provider.dart';
 import 'package:flutter_demo_wireframe_design/welcome_screen.dart';
 
 class VisitPurpose extends StatefulWidget {
@@ -43,21 +46,22 @@ class _VisitPurposeState extends State<VisitPurpose> {
 
   @override
   void initState() {
-    //handle display name
-    if (widget.userName.contains(' ', 0)) {
-      int _firstSpace = widget.userName.indexOf(' ');
-      if (widget.userName.substring(0, _firstSpace) == 'Anonymous') {
-        _displayName = widget.userName;
-      } else {
-        _displayName = widget.userName.substring(0, _firstSpace);
-      }
-    } else if (!widget.userName.contains(' ') && widget.userName.length >= 6) {
-      _displayName = widget.userName.substring(0, 6) + '...';
-    } else {
-      _displayName = widget.userName;
-    }
-    //handle avatar
-    int spacePos = widget.userName.indexOf(' ');
+    // //handle display name
+    // if (widget.userName.contains(' ', 0)) {
+    //   int _firstSpace = widget.userName.indexOf(' ');
+    //   if (widget.userName.substring(0, _firstSpace) == 'Anonymous') {
+    //     _displayName = widget.userName;
+    //   } else {
+    //     _displayName = widget.userName.substring(0, _firstSpace);
+    //   }
+    // } else if (!widget.userName.contains(' ') && widget.userName.length >= 6) {
+    //   _displayName = widget.userName.substring(0, 6) + '...';
+    // } else {
+    //   _displayName = widget.userName;
+    // }
+    // //handle avatar
+    int spacePos;
+    spacePos = widget.userName.indexOf(' ');
     String animalName = widget.userName.substring(spacePos + 1);
     if (widget.userName.contains('Anonymous')) {
       for (var i = 0; i < kAnimalAvatar.length; i++) {
@@ -73,6 +77,75 @@ class _VisitPurposeState extends State<VisitPurpose> {
     super.initState();
   }
 
+  String _displayNameByLanguages(BuildContext context) {
+    // final _userBloc = UserProvider.of(context);
+    if (Translations.trackingLanguage == 'en') {
+      if (widget.userName.contains(' ', 0)) {
+        int _firstSpace = widget.userName.indexOf(' ');
+        if (widget.userName.substring(0, _firstSpace) == 'Anonymous') {
+          _displayName = widget.userName;
+        } else {
+          _displayName = widget.userName.substring(0, _firstSpace);
+        }
+      } else if (!widget.userName.contains(' ') && widget.userName.length > 6) {
+        _displayName = widget.userName.substring(0, 6) + '...';
+      } else {
+        _displayName = widget.userName;
+      }
+    } else {
+      int _lastSpace = widget.userName.lastIndexOf(' ');
+      int _firstSpace = widget.userName.indexOf(' ');
+      if (widget.userName.contains(' ', 0)) {
+        if (widget.userName.substring(0, _firstSpace) == 'Anonymous') {
+          _displayName = widget.userName;
+        } else {
+          _displayName =
+              widget.userName.substring(_lastSpace + 1, widget.userName.length);
+        }
+      } else if (!widget.userName.contains(' ') && widget.userName.length > 6) {
+        _displayName = widget.userName.substring(0, 6) + '...';
+      } else {
+        _displayName = widget.userName;
+      }
+    }
+    return _displayName;
+  }
+
+  // _displayNameInEnglish(String name) {
+  //   if (widget.userName.contains(' ', 0)) {
+  //         int _firstSpace = widget.userName.indexOf(' ');
+  //         if (widget.userName.substring(0, _firstSpace) == 'Anonymous') {
+  //           _displayName = widget.userName;
+  //         } else {
+  //           _displayName = widget.userName.substring(0, _firstSpace);
+  //         }
+  //       } else if (!widget.userName.contains(' ') &&
+  //           widget.userName.length > 6) {
+  //         _displayName = widget.userName.substring(0, 6) + '...';
+  //       } else {
+  //         _displayName = widget.userName;
+  //       }
+  //       return _displayName;
+  // }
+
+  // _displayNameInVnese(String name) {
+  //   int _lastSpace = widget.userName.lastIndexOf(' ');
+  //       int _firstSpace = widget.userName.indexOf(' ');
+  //       if (widget.userName.contains(' ', 0)) {
+  //         if (widget.userName.substring(0, _firstSpace) == 'Anonymous') {
+  //           _displayName = widget.userName;
+  //         } else {
+  //           _displayName = widget.userName
+  //               .substring(_lastSpace + 1, widget.userName.length);
+  //         }
+  //       } else if (!widget.userName.contains(' ') &&
+  //           widget.userName.length > 6) {
+  //         _displayName = widget.userName.substring(0, 6) + '...';
+  //       } else {
+  //         _displayName = widget.userName;
+  //       }
+  // }
+
   @override
   Widget build(BuildContext context) {
     // final _userBloc = UserProvider.of(context);
@@ -82,9 +155,9 @@ class _VisitPurposeState extends State<VisitPurpose> {
       body: Column(
         children: <Widget>[
           AppBarMain(
-            content: 'Check in',
+            content: Translations.of(context).text('ckin_app_bar'),
             isImplyLeading: true,
-            leadingText: 'Back',
+            leadingText: Translations.of(context).text('back'),
           ),
           ClipRRect(
             borderRadius: BorderRadius.only(
@@ -104,7 +177,7 @@ class _VisitPurposeState extends State<VisitPurpose> {
                       mainAxisSize: MainAxisSize.min,
                       children: <Widget>[
                         Text(
-                          'Hi $_displayName, you come as...',
+                          '${Translations.of(context).text('vp_hi')} ${_displayNameByLanguages(context)}, ${Translations.of(context).text('vp_come_as')}',
                           style: TextStyle(
                               fontSize: 36.0, color: Color(0xFFF15D03)),
                           textAlign: TextAlign.center,
@@ -112,31 +185,43 @@ class _VisitPurposeState extends State<VisitPurpose> {
                         Container(
                           margin:
                               const EdgeInsets.only(top: 38.0, bottom: 32.0),
-                          child:
-                              customButton('Candidate', Color(0xFF00AEEF), () {
+                          child: customButton(
+                              Translations.of(context).text('vp_candidate'),
+                              Color(0xFF00AEEF), () {
                             // _userBloc.addRole('Candidate');
                             // _userBloc.addUser();
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) => WelcomeScreen(
-                                          user: User(name: widget.userName,avatar: _avatarUrl,role: 'Candidate'),
+                                          user: User(
+                                              name: widget.userName,
+                                              avatar: _avatarUrl,
+                                              role: Translations.of(context)
+                                                  .text('vp_candidate')),
                                         )));
                           }),
                         ),
-                        customButton('Guest', Color(0xFF70BF43), () {
+                        customButton(Translations.of(context).text('vp_guest'),
+                            Color(0xFF70BF43), () {
                           // _userBloc.addRole('Guest');
                           // _userBloc.addUser();
                           Navigator.push(
                               context,
                               MaterialPageRoute(
                                   builder: (context) => WelcomeScreen(
-                                        user: User(name: widget.userName,avatar: _avatarUrl,role: 'Guest'),
+                                        user: User(
+                                            name: widget.userName,
+                                            avatar: _avatarUrl,
+                                            role: Translations.of(context)
+                                                .text('vp_guest')),
                                       )));
                         }),
-                        CheckinScreen().createState().orSection(200.0, 32.0),
+                        CheckinScreen()
+                            .createState()
+                            .orSection(context, 200.0, 32.0),
                         customButton(
-                          'Just skip',
+                          Translations.of(context).text('vp_skip'),
                           Color(0xFFF15D03),
                           () {
                             // _userBloc.addRole('');
@@ -145,7 +230,10 @@ class _VisitPurposeState extends State<VisitPurpose> {
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) => WelcomeScreen(
-                                          user: User(name: widget.userName,avatar: _avatarUrl,role: ''),
+                                          user: User(
+                                              name: widget.userName,
+                                              avatar: _avatarUrl,
+                                              role: ''),
                                         )));
                           },
                         ),
@@ -179,7 +267,7 @@ class _VisitPurposeState extends State<VisitPurpose> {
                 ),
               ),
               Text(
-                'Exit',
+                Translations.of(context).text('exit'),
                 style: TextStyle(
                   fontSize: 18.0,
                   fontWeight: FontWeight.w500,

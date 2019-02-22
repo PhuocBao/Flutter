@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_demo_wireframe_design/custom_player.dart';
 import 'package:flutter_demo_wireframe_design/input_name.dart';
+import 'package:flutter_demo_wireframe_design/user_bloc.dart';
 import 'package:flutter_demo_wireframe_design/user_provider.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:flutter_demo_wireframe_design/welcome_screen.dart';
@@ -21,7 +22,8 @@ class _MyAppState extends State<DiscoverScreen> {
   @override
   Widget build(BuildContext context) {
     int _index = 1;
-    return UserProvider(
+    return BlocProvider(
+      bloc: UserBloc(),
       child: Scaffold(
           appBar: PreferredSize(
             preferredSize: Size(AppBar().preferredSize.width, 120.0),

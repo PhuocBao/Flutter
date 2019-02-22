@@ -1,10 +1,12 @@
 import 'dart:async';
 
+import 'package:flutter/material.dart';
 import 'package:flutter_demo_wireframe_design/translations.dart';
 import 'package:flutter_demo_wireframe_design/user.dart';
+import 'package:flutter_demo_wireframe_design/user_provider.dart';
 import 'package:rxdart/rxdart.dart';
 
-class UserBloc {
+class UserBloc extends BlocBase {
   User _user = User();
   List<User> _users = List();
   // Translations _translations = Translations(Locale('en'));
@@ -53,13 +55,13 @@ class UserBloc {
     }
   }
 
-  Future<void> changeLanguage(bool isEnglish) async {
-    // if (isEnglish) {
-    //   _languageController.add(await Translations.load((Locale('en'))));
-    // } else {
-    //   _languageController.add(await Translations.load((Locale('vi'))));
-    // }
-  }
+  // Future<void> changeLanguage(bool isEnglish) async {
+  //   if (isEnglish) {
+  //     _languageController.add(await Translations.load((Locale('en'))));
+  //   } else {
+  //     _languageController.add(await Translations.load((Locale('vi'))));
+  //   }
+  // }
 
   void dispose() {
     _userController.close();

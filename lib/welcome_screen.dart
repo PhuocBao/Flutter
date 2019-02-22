@@ -4,7 +4,10 @@ import 'package:flutter_demo_wireframe_design/button_border.dart';
 import 'package:flutter_demo_wireframe_design/constants.dart';
 import 'package:flutter_demo_wireframe_design/custom_hero_transition.dart';
 import 'package:flutter_demo_wireframe_design/discover_screen.dart';
+import 'package:flutter_demo_wireframe_design/home_transition.dart';
 import 'package:flutter_demo_wireframe_design/input_name.dart';
+import 'package:flutter_demo_wireframe_design/main.dart';
+import 'package:flutter_demo_wireframe_design/translations.dart';
 import 'package:flutter_demo_wireframe_design/user.dart';
 import 'package:flutter_demo_wireframe_design/visit_purpose.dart';
 
@@ -24,7 +27,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     String animalName = widget.user.name.substring(spacePos + 1);
     if (widget.user.name.contains('Anonymous')) {
       for (var i = 0; i < kAnimalAvatar.length; i++) {
-        if (kAnimalAvatar.elementAt(i).contains(animalName.toLowerCase(), 16) == true) {
+        if (kAnimalAvatar.elementAt(i).contains(animalName.toLowerCase(), 16) ==
+            true) {
           _avatarUrl = kAnimalAvatar.elementAt(i);
           break;
         }
@@ -44,8 +48,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
       body: Column(
         children: <Widget>[
           AppBarMain(
-            content: 'Hi, you are going to meet',
-            leadingText: 'Back',
+            content: Translations.of(context).text('wc_app_bar'),
+            leadingText: Translations.of(context).text('back'),
             isImplyLeading: true,
           ),
           ClipRRect(
@@ -95,7 +99,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                     width: 160.08,
                   ),
                   Container(
-                    margin: const EdgeInsets.symmetric(vertical: 26.0),
+                    margin: const EdgeInsets.only(top: 26.0, bottom: 12.0),
                     child: Text(
                       'Mrs. Thao Thai',
                       style: TextStyle(
@@ -105,16 +109,16 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                     ),
                   ),
                   Text(
-                    'HR Manager',
+                    Translations.of(context).text('wc_in_charge_role'),
                     style: TextStyle(
-                      color: Color(0xFF828282),
+                      color: Color(0xFFF15D03),
                       fontSize: 23.5,
                     ),
                   ),
                   Container(
-                    margin: const EdgeInsets.symmetric(vertical: 29.0),
+                    margin: const EdgeInsets.only(top: 20.0, bottom: 38.0),
                     child: Text(
-                      'This person have been notified you are here! Please wait a moment!',
+                      Translations.of(context).text('wc_waiting_text'),
                       style: TextStyle(
                         color: Color(0xFF4F4F4F),
                         fontSize: 20.0,
@@ -145,7 +149,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
               ),
             ),
             navigateButton(
-                'Discover Sioux',
+                Translations.of(context).text('discover_sioux'),
                 () => Navigator.push(context,
                     MaterialPageRoute(builder: (context) => DiscoverScreen())))
           ],
@@ -167,37 +171,68 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
-                CustomHeroTransition(
-                          imageUrl: _avatarUrl,
-                          name: widget.user.name,
-                        ),
-                // StreamBuilder<User>(
-                //   stream: _userBloc.user,
-                //   builder: (context, snapshot) {
-                //     if (snapshot.hasData) {
-                //       return Container(
-                //         margin: const EdgeInsets.only(top: 23.5,bottom: 6.0),
-                //         child: Text(
-                //           '${snapshot.data.name}',
-                //           style: TextStyle(color: Colors.black, fontSize: 20.0),
-                //           textAlign: TextAlign.center,
-                //         ),
-                //       );
-                //     } else {
-                //       return Container();
-                //     }
-                //   },
-                // ),
+                Hero(
+                  tag: widget.user.avatar,
+                  child: Image.asset(
+                    _avatarUrl,
+                    height: 160.08,
+                  ),
+                ),
                 Container(
-                        margin: const EdgeInsets.only(bottom: 18.0),
-                        child: Text(
-                          widget.user.role == null ? '' : widget.user.role,
-                          style: TextStyle(
-                              color: Color(widget.user.role == 'Guest' ? 0xFF70BF43 : 0xFF00AEEF), fontSize: 23.5),
+                  //margin: const EdgeInsets.only(top: 10.0),
+                  child: Hero(
+                    tag: widget.user.name,
+                    flightShuttleBuilder: (
+                      BuildContext flightContext,
+                      Animation<double> animation,
+                      HeroFlightDirection flightDirection,
+                      BuildContext fromHeroContext,
+                      BuildContext toHeroContext,
+                    ) {
+                      return ScaleTransition(
+                        scale: animation.drive(
+                          Tween<double>(begin: 36.0 / 24.0, end: 1.0).chain(
+                            CurveTween(
+                              curve: Curves.ease,
+                            ),
+                          ),
                         ),
+                        child: Scaffold(
+                          backgroundColor: Color.fromRGBO(255, 255, 255, 0.0),
+                          body: Container(
+                            alignment: Alignment(0, 0),
+                            child: SingleChildScrollView(
+                              child: toHeroContext.widget,
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                    child: Container(
+                      padding: EdgeInsets.only(top: 10.0, bottom: 10),
+                      child: Text(
+                        widget.user.name,
+                        softWrap: true,
+                        style: TextStyle(
+                            fontSize: 24.0, fontWeight: FontWeight.w500),
                       ),
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.only(bottom: 18.0),
+                  child: Text(
+                    widget.user.role == null ? '' : widget.user.role,
+                    style: TextStyle(
+                        color: Color(widget.user.role == 'Guest' ||
+                                widget.user.role == 'Khách hàng'
+                            ? 0xFF70BF43
+                            : 0xFF00AEEF),
+                        fontSize: 23.5),
+                  ),
+                ),
                 ButtonBorder(
-                  content: 'Edit profile',
+                  content: Translations.of(context).text('wc_edit_profile'),
                   callback: () => Navigator.pushReplacement(context,
                       MaterialPageRoute(builder: (context) => CheckinScreen())),
                 ),

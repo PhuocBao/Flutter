@@ -5,7 +5,12 @@ class AppBarMain extends StatelessWidget {
   final bool isImplyLeading;
   final String leadingText;
 
-  const AppBarMain({Key key, @required this.content, @required this.isImplyLeading, @required this.leadingText}) : super(key: key);
+  const AppBarMain(
+      {Key key,
+      @required this.content,
+      @required this.isImplyLeading,
+      @required this.leadingText})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -14,9 +19,11 @@ class AppBarMain extends StatelessWidget {
       height: 128.0,
       child: AppBar(
         automaticallyImplyLeading: isImplyLeading,
-        title: Text(leadingText, style: TextStyle(fontWeight: FontWeight.w500,
-                fontSize: 18.0,
-                color: Colors.white),),
+        title: Text(
+          leadingText,
+          style: TextStyle(
+              fontWeight: FontWeight.w500, fontSize: 18.0, color: Colors.white),
+        ),
         flexibleSpace: Center(
           child: Text(
             content,

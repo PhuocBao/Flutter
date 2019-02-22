@@ -1,12 +1,12 @@
 final List<String> kAnimal = [
-  'bear',
-  'cat',
-  'dog',
-  'fox',
-  'horse',
-  'owl',
-  'penguin',
-  'pig'
+  'Bear',
+  'Cat',
+  'Dog',
+  'Fox',
+  'Horse',
+  'Owl',
+  'Penguin',
+  'Pig'
 ];
 
 final List<String> kAnimalAvatar = [

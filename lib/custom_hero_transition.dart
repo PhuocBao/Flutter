@@ -59,20 +59,13 @@ class _CustomHeroTransitionState extends State<CustomHeroTransition> {
         tag: widget.imageUrl,
         flightShuttleBuilder:
             (context, animation, flyDirection, fromHeroContext, toHeroContext) {
-          // final toHero = toHeroContext.widget;
-          // if (flyDirection == HeroFlightDirection.push) {
-          //   _controller.forward();
-          //   print('push');
-          // } else {
-          //   _controller.reverse();
-          //   print('pop');
-          // }
           if (flyDirection == HeroFlightDirection.push) {
             return Scaffold(
               backgroundColor: Colors.transparent,
               body: _flyingPlaceHolder(),
             );
           }
+          print('pop');
           return Scaffold(
             backgroundColor: Colors.transparent,
             body: _flyingPlaceHolder(),

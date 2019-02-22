@@ -5,6 +5,7 @@ import 'dart:convert';
 
 class Translations {
   Locale locale;
+  static String trackingLanguage = 'en';
   static Map<dynamic, dynamic> _localizedValues;
 
   Translations(Locale locale) {
@@ -22,13 +23,14 @@ class Translations {
 
   static Future<Translations> load(Locale locale) async {
     Translations translations = Translations(locale);
+    trackingLanguage = translations.currentLanguage;
     String json =
         await rootBundle.loadString('locale/i18n_${locale.languageCode}.json');
     _localizedValues = jsonDecode(json);
     return translations;
   }
 
-  get currentLanguage => locale.languageCode;
+  String get currentLanguage => locale.languageCode;
 }
 
 class TranslationsDelegate extends LocalizationsDelegate<Translations> {

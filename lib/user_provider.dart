@@ -1,16 +1,41 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_demo_wireframe_design/user_bloc.dart';
 
-class UserProvider extends InheritedWidget {
-  final UserBloc _userBloc = UserBloc();
+abstract class BlocBase {
+  void dispose();
+}
 
-  UserProvider({Key key, Widget child}) : super(key: key, child: child);
+// Generic BLoC provider
+class BlocProvider<T extends BlocBase> extends StatefulWidget {
+  BlocProvider({
+    Key key,
+    @required this.child,
+    @required this.bloc,
+  }) : super(key: key);
+
+  final T bloc;
+  final Widget child;
 
   @override
-  bool updateShouldNotify(InheritedWidget oldWidget) => true;
+  _BlocProviderState<T> createState() => _BlocProviderState<T>();
 
-  static UserBloc of(BuildContext context) {
-    return (context.inheritFromWidgetOfExactType(UserProvider) as UserProvider)
-        ._userBloc;
+  static T of<T extends BlocBase>(BuildContext context) {
+    final type = _typeOf<BlocProvider<T>>();
+    BlocProvider<T> provider = context.ancestorWidgetOfExactType(type);
+    return provider.bloc;
+  }
+
+  static Type _typeOf<T>() => T;
+}
+
+class _BlocProviderState<T> extends State<BlocProvider<BlocBase>> {
+  @override
+  void dispose() {
+    widget.bloc.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return widget.child;
   }
 }
